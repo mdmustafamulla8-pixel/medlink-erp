@@ -1,0 +1,324 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserId = principal;
+type Timestamp = int;
+type SalesSummary = 
+ record {
+   gst12Total: nat;
+   gst18Total: nat;
+   gst5Total: nat;
+   netRevenue: nat;
+   totalGst: nat;
+   totalInvoices: nat;
+   totalReturns: nat;
+   totalSales: nat;
+ };
+type PurchaseSummary = 
+ record {
+   deliveredOrders: nat;
+   pendingOrders: nat;
+   totalOrders: nat;
+   totalSpend: nat;
+ };
+type PurchaseOrderLine = 
+ record {
+   discountPct: nat;
+   distributorId: DistributorId;
+   lineTotal: nat;
+   medicineId: opt MedicineId;
+   medicineName: text;
+   qty: nat;
+   unitPrice: nat;
+ };
+type PurchaseOrderInput = 
+ record {
+   distributorId: DistributorId;
+   lines: vec OrderLineInput;
+ };
+type PurchaseOrder = 
+ record {
+   createdAt: Timestamp;
+   createdBy: UserId;
+   distributorId: DistributorId;
+   distributorName: text;
+   id: OrderId;
+   lines: vec PurchaseOrderLine;
+   status: OrderStatus;
+   totalAmount: nat;
+   updatedAt: Timestamp;
+ };
+type PaymentMode = 
+ variant {
+   card;
+   cash;
+   upi;
+ };
+type OrderStatus = 
+ variant {
+   cancelled;
+   confirmed;
+   delivered;
+   pending;
+   shipped;
+ };
+type OrderLineInput = 
+ record {
+   discountPct: nat;
+   medicineId: opt MedicineId;
+   medicineName: text;
+   qty: nat;
+   unitPrice: nat;
+ };
+type OrderId = nat;
+type MedicineInput = 
+ record {
+   barcodeId: opt text;
+   genericName: text;
+   gstRate: GstRate;
+   hsnCode: text;
+   lowStockThreshold: nat;
+   name: text;
+   purchasePrice: nat;
+   rackLocation: text;
+   stockQty: nat;
+   unitPrice: nat;
+ };
+type MedicineId = nat;
+type MedicineBatch = 
+ record {
+   batchNumber: text;
+   createdAt: Timestamp;
+   expiryDate: Timestamp;
+   id: BatchId;
+   medicineId: MedicineId;
+   purchasePrice: nat;
+   qty: nat;
+ };
+type Medicine = 
+ record {
+   barcodeId: opt text;
+   createdAt: Timestamp;
+   genericName: text;
+   gstRate: GstRate;
+   hsnCode: text;
+   id: MedicineId;
+   isActive: bool;
+   lowStockThreshold: nat;
+   name: text;
+   purchasePrice: nat;
+   rackLocation: text;
+   stockQty: nat;
+   unitPrice: nat;
+   updatedAt: Timestamp;
+ };
+type LowStockAlert = 
+ record {
+   currentStock: nat;
+   medicineId: MedicineId;
+   medicineName: text;
+   threshold: nat;
+ };
+type LineItemInput = 
+ record {
+   batchId: BatchId;
+   discountPct: nat;
+   medicineId: MedicineId;
+   qty: nat;
+ };
+type InvoiceLineItem = 
+ record {
+   batchId: BatchId;
+   batchNumber: text;
+   discountPct: nat;
+   gstAmount: nat;
+   gstRate: GstRate;
+   lineTotal: nat;
+   medicineId: MedicineId;
+   medicineName: text;
+   qty: nat;
+   unitPrice: nat;
+ };
+type InvoiceInput = 
+ record {
+   customerId: opt CustomerId;
+   customerName: text;
+   isReturn: bool;
+   lineItems: vec LineItemInput;
+   originalInvoiceId: opt InvoiceId;
+   paymentMode: PaymentMode;
+ };
+type InvoiceId = nat;
+type Invoice = 
+ record {
+   createdAt: Timestamp;
+   createdBy: UserId;
+   customerId: opt CustomerId;
+   customerName: text;
+   id: InvoiceId;
+   invoiceNumber: text;
+   isReturn: bool;
+   lineItems: vec InvoiceLineItem;
+   originalInvoiceId: opt InvoiceId;
+   paymentMode: PaymentMode;
+   subtotal: nat;
+   totalAmount: nat;
+   totalGst: nat;
+ };
+type GstRate = 
+ variant {
+   gst12;
+   gst18;
+   gst5;
+ };
+type GstBreakdown = 
+ record {
+   gstAmount: nat;
+   rate: GstRate;
+   taxableAmount: nat;
+ };
+type ExpiryAlert = 
+ record {
+   batchId: BatchId;
+   batchNumber: text;
+   expiryDate: Timestamp;
+   medicineId: MedicineId;
+   medicineName: text;
+   qty: nat;
+ };
+type DistributorOffer = 
+ record {
+   deliveryDays: nat;
+   discountPct: nat;
+   distributorId: DistributorId;
+   distributorName: text;
+   price: nat;
+   score: nat;
+   stockQty: nat;
+ };
+type DistributorInput = 
+ record {
+   address: text;
+   contactPerson: text;
+   email: opt text;
+   gstNumber: opt text;
+   name: text;
+   phone: text;
+ };
+type DistributorId = nat;
+type DistributorCatalogEntry = 
+ record {
+   deliveryDays: nat;
+   discountPct: nat;
+   distributorId: DistributorId;
+   hsnCode: text;
+   medicineId: opt MedicineId;
+   medicineName: text;
+   price: nat;
+   stockQty: nat;
+   updatedAt: Timestamp;
+ };
+type Distributor = 
+ record {
+   address: text;
+   contactPerson: text;
+   createdAt: Timestamp;
+   email: opt text;
+   gstNumber: opt text;
+   id: DistributorId;
+   isActive: bool;
+   name: text;
+   phone: text;
+ };
+type DateRange = 
+ record {
+   fromTime: Timestamp;
+   toTime: Timestamp;
+ };
+type CustomerInput = 
+ record {
+   address: opt text;
+   gstNumber: opt text;
+   name: text;
+   phone: opt text;
+ };
+type CustomerId = nat;
+type Customer = 
+ record {
+   address: opt text;
+   createdAt: Timestamp;
+   gstNumber: opt text;
+   id: CustomerId;
+   name: text;
+   phone: opt text;
+ };
+type CatalogEntryInput = 
+ record {
+   deliveryDays: nat;
+   discountPct: nat;
+   hsnCode: text;
+   medicineName: text;
+   price: nat;
+   stockQty: nat;
+ };
+type BatchInput = 
+ record {
+   batchNumber: text;
+   expiryDate: Timestamp;
+   medicineId: MedicineId;
+   purchasePrice: nat;
+   qty: nat;
+ };
+type BatchId = nat;
+service : {
+  _initializeAccessControl: () -> ();
+  addBatch: (input: BatchInput) -> (MedicineBatch);
+  addCustomer: (input: CustomerInput) -> (Customer);
+  addDistributor: (input: DistributorInput) -> (Distributor);
+  addMedicine: (input: MedicineInput) -> (Medicine);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  bulkUpsertCatalog: (distributorId: DistributorId, entries:
+   vec CatalogEntryInput) -> (nat);
+  createInvoice: (input: InvoiceInput) -> (Invoice);
+  createPurchaseOrder: (input: PurchaseOrderInput) -> (PurchaseOrder);
+  deleteDistributor: (id: DistributorId) -> (bool);
+  deleteMedicine: (id: MedicineId) -> (bool);
+  getCallerUserRole: () -> (UserRole) query;
+  getCustomer: (id: CustomerId) -> (opt Customer) query;
+  getCustomerLedger: (customerId: CustomerId) -> (vec Invoice) query;
+  getExpiringBatches: (withinDays: nat) ->
+   (vec record {
+          MedicineBatch;
+          Medicine;
+        }) query;
+  getExpiryAlerts: (withinDays: nat) -> (vec ExpiryAlert) query;
+  getGstBreakdown: (range: DateRange) -> (vec GstBreakdown) query;
+  getInvoice: (id: InvoiceId) -> (opt Invoice) query;
+  getLowStockAlerts: () -> (vec LowStockAlert) query;
+  getLowStockMedicines: () -> (vec Medicine) query;
+  getMedicine: (id: MedicineId) -> (opt Medicine) query;
+  getPurchaseOrder: (id: OrderId) -> (opt PurchaseOrder) query;
+  getPurchaseSummary: (range: DateRange) -> (PurchaseSummary) query;
+  getSalesSummary: (range: DateRange) -> (SalesSummary) query;
+  isCallerAdmin: () -> (bool) query;
+  listBatchesForMedicine: (medicineId: MedicineId) ->
+   (vec MedicineBatch) query;
+  listCustomers: () -> (vec Customer) query;
+  listDistributors: () -> (vec Distributor) query;
+  listInvoices: () -> (vec Invoice) query;
+  listMedicines: () -> (vec Medicine) query;
+  listPurchaseOrders: () -> (vec PurchaseOrder) query;
+  searchDistributorOffers: (medicineName: text) ->
+   (vec DistributorOffer) query;
+  searchMedicines: (term: text) -> (vec Medicine) query;
+  updateDistributor: (id: DistributorId, input: DistributorInput) ->
+   (opt Distributor);
+  updateMedicine: (id: MedicineId, input: MedicineInput) -> (opt Medicine);
+  updateOrderStatus: (id: OrderId, status: OrderStatus) ->
+   (opt PurchaseOrder);
+  upsertCatalogEntry: (distributorId: DistributorId, input:
+   CatalogEntryInput) -> (DistributorCatalogEntry);
+}

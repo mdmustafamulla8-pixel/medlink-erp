@@ -1,0 +1,187 @@
+// Version: 1.0.0
+type BatchId__34059046 = Nat;
+type CustomerId__1015005394 = Nat;
+type Customer__192564006 =
+  {
+    address : ?Text;
+    createdAt : Timestamp__301639476;
+    gstNumber : ?Text;
+    id : CustomerId__1015005394;
+    name : Text;
+    phone : ?Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DistributorCatalogEntry__912305393 =
+  {
+    deliveryDays : Nat;
+    discountPct : Nat;
+    distributorId : DistributorId__189278739;
+    hsnCode : Text;
+    medicineId : ?MedicineId__192109341;
+    medicineName : Text;
+    price : Nat;
+    stockQty : Nat;
+    updatedAt : Timestamp__301639476
+  };
+type DistributorId__189278739 = Nat;
+type Distributor__802423095 =
+  {
+    address : Text;
+    contactPerson : Text;
+    createdAt : Timestamp__301639476;
+    email : ?Text;
+    gstNumber : ?Text;
+    id : DistributorId__189278739;
+    isActive : Bool;
+    name : Text;
+    phone : Text
+  };
+type GstRate__84892825 = {#gst12; #gst18; #gst5};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type InvoiceId__909937669 = Nat;
+type InvoiceLineItem__777403198 =
+  {
+    batchId : BatchId__34059046;
+    batchNumber : Text;
+    discountPct : Nat;
+    gstAmount : Nat;
+    gstRate : GstRate__84892825;
+    lineTotal : Nat;
+    medicineId : MedicineId__192109341;
+    medicineName : Text;
+    qty : Nat;
+    unitPrice : Nat
+  };
+type Invoice__752737744 =
+  {
+    createdAt : Timestamp__301639476;
+    createdBy : UserId__158757552;
+    customerId : ?CustomerId__1015005394;
+    customerName : Text;
+    id : InvoiceId__909937669;
+    invoiceNumber : Text;
+    isReturn : Bool;
+    lineItems : [InvoiceLineItem__777403198];
+    originalInvoiceId : ?InvoiceId__909937669;
+    paymentMode : PaymentMode__779188169;
+    subtotal : Nat;
+    totalAmount : Nat;
+    totalGst : Nat
+  };
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MedicineBatch__342692293 =
+  {
+    batchNumber : Text;
+    createdAt : Timestamp__301639476;
+    expiryDate : Timestamp__301639476;
+    id : BatchId__34059046;
+    medicineId : MedicineId__192109341;
+    purchasePrice : Nat;
+    qty : Nat
+  };
+type MedicineId__192109341 = Nat;
+type Medicine__181502685 =
+  {
+    barcodeId : ?Text;
+    createdAt : Timestamp__301639476;
+    genericName : Text;
+    gstRate : GstRate__84892825;
+    hsnCode : Text;
+    id : MedicineId__192109341;
+    isActive : Bool;
+    lowStockThreshold : Nat;
+    name : Text;
+    purchasePrice : Nat;
+    rackLocation : Text;
+    stockQty : Nat;
+    unitPrice : Nat;
+    updatedAt : Timestamp__301639476
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OrderId__197865225 = Nat;
+type OrderStatus__393009242 =
+  {#cancelled; #confirmed; #delivered; #pending; #shipped};
+type PaymentMode__779188169 = {#card; #cash; #upi};
+type PurchaseOrderLine__619657386 =
+  {
+    discountPct : Nat;
+    distributorId : DistributorId__189278739;
+    lineTotal : Nat;
+    medicineId : ?MedicineId__192109341;
+    medicineName : Text;
+    qty : Nat;
+    unitPrice : Nat
+  };
+type PurchaseOrder__695694048 =
+  {
+    createdAt : Timestamp__301639476;
+    createdBy : UserId__158757552;
+    distributorId : DistributorId__189278739;
+    distributorName : Text;
+    id : OrderId__197865225;
+    lines : [PurchaseOrderLine__619657386];
+    status : OrderStatus__393009242;
+    totalAmount : Nat;
+    updatedAt : Timestamp__301639476
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable batches :
+    {
+      var root : Node__46230540<BatchId__34059046, MedicineBatch__342692293>;
+      var size : Nat__490723111
+    };
+  stable billState : {var nextCustomerId : Nat; var nextInvoiceId : Nat};
+  stable catalog :
+    {
+      var root :
+        Node__46230540<(DistributorId__189278739, Text),
+                        DistributorCatalogEntry__912305393>;
+      var size : Nat__490723111
+    };
+  stable customers :
+    {
+      var root : Node__46230540<CustomerId__1015005394, Customer__192564006>;
+      var size : Nat__490723111
+    };
+  stable distributors :
+    {
+      var root :
+        Node__46230540<DistributorId__189278739, Distributor__802423095>;
+      var size : Nat__490723111
+    };
+  stable invState : {var nextBatchId : Nat; var nextMedicineId : Nat};
+  stable invoices :
+    {
+      var root : Node__46230540<InvoiceId__909937669, Invoice__752737744>;
+      var size : Nat__490723111
+    };
+  stable medicines :
+    {
+      var root : Node__46230540<MedicineId__192109341, Medicine__181502685>;
+      var size : Nat__490723111
+    };
+  stable orders :
+    {
+      var root : Node__46230540<OrderId__197865225, PurchaseOrder__695694048>;
+      var size : Nat__490723111
+    };
+  stable purchState : {var nextDistributorId : Nat; var nextOrderId : Nat};
+  stable seedState : {var seeded : Bool}
+};

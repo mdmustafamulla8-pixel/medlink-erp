@@ -1,0 +1,27 @@
+{
+  "overview": "MedLink ERP is a modern cloud-based pharmacy and distributor management platform. It streamlines billing, inventory tracking, purchase orders with smart supplier comparison, and distributor catalog management — all in one clean, responsive interface designed for Indian pharmacy businesses.",
+  "features": [
+    "Role-based login (Admin, Pharmacist, Billing staff, Manager)",
+    "Dashboard with sales summary, low stock and expiry alerts, pending orders",
+    "Inventory management with batch/expiry/GST/HSN tracking",
+    "Fast billing system with GST auto-calculation and A4 PDF invoice generation",
+    "Smart purchase order system — search distributors, compare price/delivery/discount, one-click PO",
+    "Distributor catalog management with CSV bulk import",
+    "Basic sales, purchase, and GST reports",
+    "Dark/light mode with pharmacy-themed teal/green UI",
+    "Responsive design for desktop and tablet"
+  ],
+  "category": "productivity",
+  "tags": [
+    "pharmacy",
+    "erp",
+    "billing",
+    "inventory",
+    "purchase-orders",
+    "distributor",
+    "gst",
+    "india",
+    "healthcare"
+  ],
+  "last_updated": "2026-05-11T19:14:29.683Z"
+}
